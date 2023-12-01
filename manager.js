@@ -15,7 +15,7 @@ app.listen(port, () => {
 });
 
 // MongoDB bağlantısı
-mongoose.connect("mongodb://localhost:27017/Sentry").then(() => {
+mongoose.connect(process.env.MONGO_DB_CONNECT_URL).then(() => {
   console.log("DB Connected.");
 });
 
@@ -27,6 +27,7 @@ mongoose.connection.on("error", (err) => {
   console.error("MongoDB connection is failed:", err);
 });
 
+// CONTROLLER
 // POST endpoint'i
 app.post("/addSentry", async (req, res) => {
   try {
@@ -76,12 +77,14 @@ const DutyService = class DutyService {
     try {
       console.log(tarih);
       const veriler = await Sentry.findOne({ dutyDate: tarih }); // filtrele gün
-      console.log("Veriler : /n", veriler);
+      // console.log("Veriler : /n", veriler);
       return veriler;
     } catch (err) {
       console.log(err);
     }
   };
+
+  // update
 };
 
 module.exports = new DutyService();
