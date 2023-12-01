@@ -13,19 +13,28 @@ client.on("message", (msg1) => {
   }
 });
 
+const today = DutyService.formatDateString(new Date());
+client.on("message", async (msg2) => {
+  if (msg2.content.toLowerCase() === "today") {
+    const result = await DutyService.getOne(today);
+    msg2.channel.send(`${result.infoDate} -> ${result.responsible} , ${result.category}`);
+  }
+});
+
 client.on("message", async (sms) => {
   const current = sms.content.split(" ");
-  if (!current[1]) {
-    sms.channel.send("Hatalı Kullanım : Örnek Kullanım => get 26.04.2020");
-  } else {
-    const tarih = current[1];
-    if (current.shift() === "get") {
-      try {
-        const result = await DutyService.getOne(tarih);
+
+  const tarih = current[1];
+  if (current.shift() === "get") {
+    try {
+      const result = await DutyService.getOne(tarih);
+      if (result) {
         sms.channel.send(`${result.infoDate} -> ${result.responsible} , ${result.category}`);
-      } catch (Err) {
-        console.log(err);
+      } else {
+        sms.channel.send("Hatalı Kullanım : Örnek Kullanım => get 26.4.2024");
       }
+    } catch (err) {
+      console.log(err);
     }
   }
 });

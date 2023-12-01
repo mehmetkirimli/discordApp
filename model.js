@@ -1,9 +1,7 @@
 const mongoose = require("mongoose");
-
 const Schema = mongoose.Schema;
 
 // DB bağlantısını burda yapmayacaz.
-
 const SentrySchema = new Schema(
   {
     dutyDate: {

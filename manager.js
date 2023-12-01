@@ -33,25 +33,9 @@ mongoose.connection.on("error", (err) => {
 app.post("/save", async (req, res) => {
   try {
     // Gelen verileri Sentry modeline uygun hale getir
-
-    console.log(req.body.dutyDate);
     const parsedDate = parse(req.body.dutyDate, "dd.MM.yyyy", new Date());
-    console.log(parsedDate);
 
-    const formatDateString = () => {
-      const dateObject = parsedDate;
-      dateObject.setUTCHours(0, 0, 0, 0); // Saat, dakika ve saniye bilgilerini sıfırla
-      // return dateObject.toISOString().split("T")[0];
-
-      const year = dateObject.getFullYear();
-      const month = dateObject.getMonth() + 1;
-      const day = dateObject.getDate();
-
-      return `${day}.${month}.${year}`;
-    };
-
-    // dutyDate'den formatlanmış tarihi al
-    this.formattedDate = formatDateString();
+    this.formattedDate = formatDateString(parsedDate);
 
     const saveData = new Sentry({
       dutyDate: parsedDate,
@@ -94,6 +78,18 @@ const DutyService = class DutyService {
     } catch (err) {
       console.log(err);
     }
+  };
+
+  formatDateString = (parsedDate) => {
+    const dateObject = parsedDate;
+    dateObject.setUTCHours(0, 0, 0, 0); // Saat, dakika ve saniye bilgilerini sıfırla
+    // return dateObject.toISOString().split("T")[0];
+
+    const year = dateObject.getFullYear();
+    const month = dateObject.getMonth() + 1;
+    const day = dateObject.getDate();
+
+    return `${day}.${month}.${year}`;
   };
 
   getOne = async (tarih) => {
