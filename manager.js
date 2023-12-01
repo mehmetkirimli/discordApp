@@ -15,7 +15,7 @@ app.listen(port, () => {
 });
 
 // MongoDB bağlantısı
-mongoose.connect(process.env.MONGO_DB_CONNECT_URL).then(() => {
+mongoose.connect("mongodb://localhost:27017/Sentry").then(() => {
   console.log("DB Connected.");
 });
 
@@ -29,14 +29,15 @@ mongoose.connection.on("error", (err) => {
 
 // CONTROLLER
 // POST endpoint'i
-app.post("/addSentry", async (req, res) => {
+app.post("/save", async (req, res) => {
   try {
     // Gelen verileri Sentry modeline uygun hale getir
     const saveData = new Sentry({
-      nameSurname: req.body.nameSurname,
       dutyDate: req.body.dutyDate,
+      infoDate: req.body.infoDate,
       description: req.body.description,
-      image: req.image,
+      category: req.body.category,
+      responsible: req.body.responsible,
     });
 
     // Veriyi MongoDB'ye kaydet

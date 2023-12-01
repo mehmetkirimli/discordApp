@@ -12,7 +12,7 @@ const SentrySchema = new Schema(
     },
     infoDate: {
       type: String,
-      require: true,
+      require: false,
     },
     description: {
       type: String,
@@ -33,7 +33,7 @@ const SentrySchema = new Schema(
   { timestamps: true }
 );
 
-SentrySchema.pre("save", function next() {
+SentrySchema.pre("save", function (next) {
   const daysOfWeek = ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"];
 
   // dutyDate'den gün bilgisini al
