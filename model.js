@@ -37,7 +37,8 @@ SentrySchema.pre("save", function (next) {
   const daysOfWeek = ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"];
 
   // dutyDate'den gün bilgisini al
-  const dutyDay = this.dutyDate.getDay(); // getDay 0'dan Pazar, 1'den Pazartesi, ..., 6'dan Cumartesi döndürür
+  const dutyDate = this.dutyDate instanceof Date ? this.dutyDate : new Date(this.dutyDate);
+  const dutyDay = dutyDate.getDay(); // getDay 0'dan Pazar, 1'den Pazartesi, ..., 6'dan Cumartesi döndürür
 
   // gün bilgisini kullanarak gün adını infoDate'e ekle
   this.infoDate = daysOfWeek[dutyDay];
