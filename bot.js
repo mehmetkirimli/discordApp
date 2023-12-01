@@ -15,10 +15,18 @@ client.on("message", (msg1) => {
 
 client.on("message", async (sms) => {
   const current = sms.content.split(" ");
-  const tarih = current[1];
-  if (current.shift() === "get") {
-    const result = await DutyService.getOne(tarih);
-    sms.channel.send(result.nameSurname);
+  if (!current[1]) {
+    sms.channel.send("Hatalı Kullanım : Örnek Kullanım => get 26.04.2020");
+  } else {
+    const tarih = current[1];
+    if (current.shift() === "get") {
+      try {
+        const result = await DutyService.getOne(tarih);
+        sms.channel.send(`${result.infoDate} -> ${result.responsible} , ${result.category}`);
+      } catch (Err) {
+        console.log(err);
+      }
+    }
   }
 });
 

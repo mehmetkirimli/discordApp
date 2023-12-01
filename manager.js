@@ -69,6 +69,32 @@ app.get("/getSentry", async (req, res) => {
   }
 });
 
+// 1 yıllık veri oluşturalım
+// function testData() {
+//   const daysInYear = 365;
+//   const currentDate = new Date();
+//   for (let i = 0; i < daysInYear; i++) {
+//     const nextDate = new Date(currentDate);
+//     nextDate.setDate(currentDate.getDate() + i);
+
+//     const sentryData = {
+//       dutyDate: nextDate, // dutyDate'e ISO formatında tarih ekleyelim
+//       // Diğer alanlara gerekirse uygun verileri ekleyebilirsiniz
+//     };
+
+//     const newSentry = new Sentry(sentryData);
+
+//     newSentry
+//       .save()
+//       .then((savedSentry) => {
+//         console.log(`Veri başarıyla eklendi: ${savedSentry.dutyDate}`);
+//       })
+//       .catch((error) => {
+//         console.error(`Veri eklenirken hata oluştu: ${error.message}`);
+//       });
+//   }
+// }
+
 const DutyService = class DutyService {
   getAll = async () => {
     try {
@@ -82,9 +108,8 @@ const DutyService = class DutyService {
 
   getOne = async (tarih) => {
     try {
-      console.log(tarih);
-      const veriler = await Sentry.findOne({ dutyDate: tarih }); // filtrele gün
-      // console.log("Veriler : /n", veriler);
+      const parsedDate = parse(tarih, "dd.MM.yyyy", new Date());
+      const veriler = await Sentry.findOne({ dutyDate: parsedDate }); // filtrele gün
       return veriler;
     } catch (err) {
       console.log(err);
@@ -93,5 +118,7 @@ const DutyService = class DutyService {
 
   // update
 };
+
+// testData();
 
 module.exports = new DutyService();
