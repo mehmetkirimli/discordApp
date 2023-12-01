@@ -1,6 +1,7 @@
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const DutyService = require("./manager");
+require("dotenv").config();
 
 client.on("ready", () => {
   console.log(`Bot ${client.user.tag} has been ready and connected.`);
@@ -23,4 +24,15 @@ client.on("message", async (sms) => {
   }
 });
 
-client.login("MTE3OTQzMjk3MTMzODUxNDQ4Mw.GJ1mfI.Zkul8N06tIMwrkVbkcMhpM6bhPSvbH4rxqZpKo");
+client.on("message", async (msg2) => {
+  if (msg2.content === "today") {
+    const today = await DutyService.getAll();
+    msg2.channel.send(
+      today.forEach((i) => {
+        i.nameSurname, i.dutyDate;
+      })
+    );
+  }
+});
+
+client.login(process.env.DISCORD_API_TOKEN);
