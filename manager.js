@@ -38,9 +38,25 @@ app.post("/save", async (req, res) => {
     const parsedDate = parse(req.body.dutyDate, "dd.MM.yyyy", new Date());
     console.log(parsedDate);
 
+    const formatDateString = () => {
+      const dateObject = parsedDate;
+      dateObject.setUTCHours(0, 0, 0, 0); // Saat, dakika ve saniye bilgilerini sıfırla
+      // return dateObject.toISOString().split("T")[0];
+
+      const year = dateObject.getFullYear();
+      const month = dateObject.getMonth() + 1;
+      const day = dateObject.getDate();
+
+      return `${day}.${month}.${year}`;
+    };
+
+    // dutyDate'den formatlanmış tarihi al
+    this.formattedDate = formatDateString();
+
     const saveData = new Sentry({
       dutyDate: parsedDate,
       infoDate: req.body.infoDate,
+      formatDate: formattedDate,
       description: req.body.description,
       category: req.body.category,
       responsible: req.body.responsible,
@@ -69,6 +85,30 @@ app.get("/getSentry", async (req, res) => {
   }
 });
 
+const DutyService = class DutyService {
+  getAll = async () => {
+    try {
+      const veriler = await Sentry.find(); // filtrele gün
+      // console.log("Veriler : /n", veriler);
+      return veriler;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  getOne = async (tarih) => {
+    try {
+      const parsedDate = parse(tarih, "dd.MM.yyyy", new Date());
+      const veriler = await Sentry.findOne({ formatDate: tarih }); // filtrele gün
+      return veriler;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // update
+};
+
 // 1 yıllık veri oluşturalım
 // function testData() {
 //   const daysInYear = 365;
@@ -94,30 +134,6 @@ app.get("/getSentry", async (req, res) => {
 //       });
 //   }
 // }
-
-const DutyService = class DutyService {
-  getAll = async () => {
-    try {
-      const veriler = await Sentry.find(); // filtrele gün
-      // console.log("Veriler : /n", veriler);
-      return veriler;
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  getOne = async (tarih) => {
-    try {
-      const parsedDate = parse(tarih, "dd.MM.yyyy", new Date());
-      const veriler = await Sentry.findOne({ dutyDate: parsedDate }); // filtrele gün
-      return veriler;
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  // update
-};
 
 // testData();
 
