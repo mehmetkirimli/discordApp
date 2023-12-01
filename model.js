@@ -7,7 +7,7 @@ const Schema = mongoose.Schema;
 const SentrySchema = new Schema(
   {
     dutyDate: {
-      type: Date,
+      type: String,
       require: true,
     },
     infoDate: {

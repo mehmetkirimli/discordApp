@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const Sentry = require("./model");
 const express = require("express");
 const bodyParser = require("body-parser");
+const { parse, format } = require("date-fns");
 
 const app = express();
 const port = 3005;
@@ -32,8 +33,13 @@ mongoose.connection.on("error", (err) => {
 app.post("/save", async (req, res) => {
   try {
     // Gelen verileri Sentry modeline uygun hale getir
+
+    console.log(req.body.dutyDate);
+    const parsedDate = parse(req.body.dutyDate, "dd.MM.yyyy", new Date());
+    console.log(parsedDate);
+
     const saveData = new Sentry({
-      dutyDate: req.body.dutyDate,
+      dutyDate: parsedDate,
       infoDate: req.body.infoDate,
       description: req.body.description,
       category: req.body.category,
